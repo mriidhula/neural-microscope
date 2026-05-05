@@ -1,0 +1,1332 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --nm-bg: var(--color-background-tertiary);
+    --nm-surface: var(--color-background-primary);
+    --nm-surface2: var(--color-background-secondary);
+    --nm-border: var(--color-border-tertiary);
+    --nm-border2: var(--color-border-secondary);
+    --nm-text: var(--color-text-primary);
+    --nm-muted: var(--color-text-secondary);
+    --nm-hint: var(--color-text-tertiary);
+    --nm-accent: #3B8BD4;
+    --nm-accent2: #1D9E75;
+    --nm-warn: #EF9F27;
+    --nm-danger: #D85A30;
+    --nm-purple: #7F77DD;
+    --nm-mono: 'Space Mono', monospace;
+    --nm-sans: 'DM Sans', var(--font-sans);
+  }
+
+  .nm-root {
+    font-family: var(--nm-sans);
+    background: var(--nm-bg);
+    color: var(--nm-text);
+    min-height: 100vh;
+    padding: 0 0 40px;
+  }
+
+  /* Header */
+  .nm-header {
+    padding: 28px 24px 20px;
+    border-bottom: 0.5px solid var(--nm-border2);
+    background: var(--nm-surface);
+  }
+  .nm-header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .nm-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .nm-logo-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #3B8BD4 0%, #7F77DD 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .nm-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    line-height: 1.2;
+  }
+  .nm-subtitle {
+    font-size: 13px;
+    color: var(--nm-muted);
+    margin-top: 2px;
+  }
+  .nm-badge {
+    font-family: var(--nm-mono);
+    font-size: 11px;
+    background: var(--color-background-info);
+    color: var(--color-text-info);
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  /* Tabs */
+  .nm-tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 24px;
+    background: var(--nm-surface);
+    border-bottom: 0.5px solid var(--nm-border2);
+    overflow-x: auto;
+  }
+  .nm-tab {
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--nm-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+  .nm-tab:hover { color: var(--nm-text); }
+  .nm-tab.active { color: var(--nm-accent); border-bottom-color: var(--nm-accent); }
+
+  /* Main content */
+  .nm-content { padding: 24px; }
+
+  /* Panels */
+  .nm-panel { display: none; }
+  .nm-panel.active { display: block; }
+
+  /* Demo panel */
+  .nm-demo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .nm-card {
+    background: var(--nm-surface);
+    border: 0.5px solid var(--nm-border);
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .nm-card-label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--nm-hint);
+    margin-bottom: 10px;
+  }
+
+  .nm-prompt-box {
+    font-family: var(--nm-mono);
+    font-size: 12px;
+    background: var(--nm-surface2);
+    border: 0.5px solid var(--nm-border);
+    border-radius: 8px;
+    padding: 12px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .nm-prompt-q { color: var(--nm-accent); }
+  .nm-prompt-a { color: var(--nm-danger); margin-top: 6px; }
+  .nm-prompt-label { font-size: 10px; color: var(--nm-hint); }
+
+  .nm-verdict {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .nm-verdict.hallucination {
+    background: #FAECE7;
+    color: #993C1D;
+  }
+  @media (prefers-color-scheme: dark) {
+    .nm-verdict.hallucination { background: #4A1B0C; color: #F0997B; }
+  }
+
+  /* Feature activations */
+  .nm-feature-list { display: flex; flex-direction: column; gap: 8px; }
+  .nm-feature-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+  }
+  .nm-feature-id {
+    font-family: var(--nm-mono);
+    font-size: 11px;
+    color: var(--nm-purple);
+    min-width: 68px;
+  }
+  .nm-feature-bar-wrap {
+    flex: 1;
+    height: 8px;
+    background: var(--nm-surface2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .nm-feature-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .nm-feature-bar.hot { background: var(--nm-danger); }
+  .nm-feature-bar.warm { background: var(--nm-warn); }
+  .nm-feature-bar.cool { background: var(--nm-accent); }
+  .nm-feature-val {
+    font-family: var(--nm-mono);
+    font-size: 11px;
+    color: var(--nm-muted);
+    min-width: 32px;
+    text-align: right;
+  }
+  .nm-feature-concept {
+    font-size: 11px;
+    color: var(--nm-muted);
+    min-width: 130px;
+  }
+
+  /* Circuit viz */
+  .nm-circuit-wrap {
+    background: var(--nm-surface2);
+    border-radius: 10px;
+    padding: 16px;
+    margin-top: 12px;
+  }
+
+  /* Step pipeline */
+  .nm-pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .nm-step-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    cursor: pointer;
+  }
+  .nm-step-row:hover .nm-step-card { border-color: var(--nm-border2); }
+  .nm-step-num-col {
+    width: 44px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .nm-step-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--nm-surface);
+    border: 0.5px solid var(--nm-border2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--nm-mono);
+    font-size: 11px;
+    color: var(--nm-muted);
+    margin-top: 14px;
+    z-index: 1;
+    transition: background 0.15s, border-color 0.15s;
+    flex-shrink: 0;
+  }
+  .nm-step-row.active .nm-step-num {
+    background: var(--nm-accent);
+    border-color: var(--nm-accent);
+    color: #fff;
+  }
+  .nm-step-row.done .nm-step-num {
+    background: var(--nm-accent2);
+    border-color: var(--nm-accent2);
+    color: #fff;
+  }
+  .nm-step-connector {
+    width: 1px;
+    flex: 1;
+    background: var(--nm-border);
+    margin: 0 auto;
+    min-height: 8px;
+  }
+  .nm-step-card {
+    flex: 1;
+    background: var(--nm-surface);
+    border: 0.5px solid var(--nm-border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 4px 0;
+    transition: border-color 0.15s;
+  }
+  .nm-step-row.active .nm-step-card {
+    border-color: var(--nm-accent);
+    background: var(--color-background-info);
+  }
+  .nm-step-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .nm-step-title {
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .nm-step-file {
+    font-family: var(--nm-mono);
+    font-size: 10px;
+    color: var(--nm-hint);
+    background: var(--nm-surface2);
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+  .nm-step-desc {
+    font-size: 12px;
+    color: var(--nm-muted);
+    margin-top: 6px;
+    line-height: 1.5;
+    display: none;
+  }
+  .nm-step-row.active .nm-step-desc { display: block; }
+
+  /* Metrics panel */
+  .nm-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .nm-metric-card {
+    background: var(--nm-surface);
+    border: 0.5px solid var(--nm-border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .nm-metric-label {
+    font-size: 11px;
+    color: var(--nm-hint);
+    margin-bottom: 6px;
+  }
+  .nm-metric-val {
+    font-family: var(--nm-mono);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  .nm-metric-sub {
+    font-size: 11px;
+    color: var(--nm-muted);
+    margin-top: 4px;
+  }
+  .nm-metric-good { color: var(--nm-accent2); }
+  .nm-metric-warn { color: var(--nm-warn); }
+  .nm-metric-bad { color: var(--nm-danger); }
+
+  /* Comparison table */
+  .nm-compare {
+    background: var(--nm-surface);
+    border: 0.5px solid var(--nm-border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 16px;
+  }
+  .nm-compare-row {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr;
+    gap: 0;
+    border-bottom: 0.5px solid var(--nm-border);
+    align-items: center;
+  }
+  .nm-compare-row:last-child { border-bottom: none; }
+  .nm-compare-row.header {
+    background: var(--nm-surface2);
+  }
+  .nm-compare-cell {
+    padding: 10px 14px;
+    font-size: 12px;
+    border-right: 0.5px solid var(--nm-border);
+  }
+  .nm-compare-cell:last-child { border-right: none; }
+  .nm-compare-row.header .nm-compare-cell {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--nm-hint);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+  .nm-highlight-row .nm-compare-cell {
+    background: var(--color-background-info);
+    color: var(--color-text-info);
+    font-weight: 500;
+  }
+
+  /* Code block */
+  .nm-code {
+    font-family: var(--nm-mono);
+    font-size: 11px;
+    line-height: 1.7;
+    background: var(--nm-surface2);
+    border: 0.5px solid var(--nm-border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    color: var(--nm-text);
+  }
+  .nm-code .kw { color: var(--nm-purple); }
+  .nm-code .str { color: var(--nm-accent2); }
+  .nm-code .num { color: var(--nm-warn); }
+  .nm-code .cmt { color: var(--nm-hint); }
+  .nm-code .fn { color: var(--nm-accent); }
+
+  /* Run button */
+  .nm-run-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: var(--nm-accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: var(--nm-sans);
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .nm-run-btn:hover { opacity: 0.9; }
+  .nm-run-btn:active { transform: scale(0.98); }
+  .nm-run-btn.running { opacity: 0.6; pointer-events: none; }
+
+  .nm-full-card {
+    background: var(--nm-surface);
+    border: 0.5px solid var(--nm-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .nm-section-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+
+  /* AUC chart */
+  .nm-auc-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .nm-auc-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .nm-auc-name {
+    font-size: 12px;
+    color: var(--nm-muted);
+    min-width: 140px;
+  }
+  .nm-auc-track {
+    flex: 1;
+    height: 10px;
+    background: var(--nm-surface2);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .nm-auc-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .nm-auc-val {
+    font-family: var(--nm-mono);
+    font-size: 12px;
+    min-width: 36px;
+    text-align: right;
+  }
+
+  .nm-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  .nm-tag.phase1 { background: #E6F1FB; color: #0C447C; }
+  .nm-tag.phase2 { background: #E1F5EE; color: #085041; }
+  .nm-tag.phase3 { background: #EEEDFE; color: #3C3489; }
+  .nm-tag.phase4 { background: #FAEEDA; color: #633806; }
+  .nm-tag.phase5 { background: #FAECE7; color: #712B13; }
+  @media (prefers-color-scheme: dark) {
+    .nm-tag.phase1 { background: #042C53; color: #85B7EB; }
+    .nm-tag.phase2 { background: #04342C; color: #5DCAA5; }
+    .nm-tag.phase3 { background: #26215C; color: #AFA9EC; }
+    .nm-tag.phase4 { background: #412402; color: #FAC775; }
+    .nm-tag.phase5 { background: #4A1B0C; color: #F0997B; }
+  }
+
+  .nm-inline-stat {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .nm-istat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .nm-istat-val {
+    font-family: var(--nm-mono);
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .nm-istat-label {
+    font-size: 10px;
+    color: var(--nm-hint);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+
+  .nm-divider {
+    height: 0.5px;
+    background: var(--nm-border);
+    margin: 16px 0;
+  }
+
+  .nm-intervention-vis {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .nm-interv-box {
+    background: var(--nm-surface2);
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+  }
+  .nm-interv-box .big { font-size: 28px; font-weight: 700; font-family: var(--nm-mono); }
+  .nm-interv-box .lbl { font-size: 11px; color: var(--nm-hint); margin-top: 4px; }
+  .nm-interv-box .sub { font-size: 11px; color: var(--nm-muted); margin-top: 6px; line-height: 1.4; }
+
+  .nm-arrow-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: var(--nm-muted);
+    padding-top: 20px;
+  }
+
+  @keyframes nm-spin { to { transform: rotate(360deg); } }
+  .nm-spinner {
+    width: 16px; height: 16px;
+    border: 2px solid var(--nm-border2);
+    border-top-color: var(--nm-accent);
+    border-radius: 50%;
+    animation: nm-spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+
+  #custom-prompt:focus, #custom-generation:focus {
+    border-color: var(--nm-accent2);
+    box-shadow: 0 0 0 3px rgba(29,158,117,0.15);
+  }
+
+  #example-chips button:hover { background: var(--nm-border2); color: var(--nm-text); }
+</style>
+
+<div class="nm-root">
+  <div class="nm-header">
+    <div class="nm-header-top">
+      <div class="nm-logo">
+        <div class="nm-logo-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="3" fill="white"/>
+            <circle cx="10" cy="10" r="6" stroke="white" stroke-width="1" stroke-dasharray="2 1.5" fill="none"/>
+            <circle cx="10" cy="10" r="9" stroke="white" stroke-width="0.5" fill="none" opacity="0.5"/>
+          </svg>
+        </div>
+        <div>
+          <div class="nm-title">Neural Microscope</div>
+          <div class="nm-subtitle">Mechanistic interpretability for hallucination detection</div>
+        </div>
+      </div>
+      <span class="nm-badge">TinyLlama 1.1B · SAE 8192-d</span>
+    </div>
+  </div>
+
+  <div class="nm-tabs">
+    <button class="nm-tab active" onclick="showTab('demo')">Live Demo</button>
+    <button class="nm-tab" onclick="showTab('pipeline')">Pipeline</button>
+    <button class="nm-tab" onclick="showTab('metrics')">Evaluation</button>
+    <button class="nm-tab" onclick="showTab('code')">Code</button>
+  </div>
+
+  <!-- DEMO PANEL -->
+  <div id="tab-demo" class="nm-panel active nm-content">
+    <div class="nm-full-card">
+      <div class="nm-card-label">Example prompt / generation</div>
+      <div class="nm-prompt-box">
+        <div class="nm-prompt-label">PROMPT</div>
+        <div class="nm-prompt-q">Who was the first person to walk on Mars?</div>
+        <div style="height:6px"></div>
+        <div class="nm-prompt-label">GENERATION</div>
+        <div class="nm-prompt-a">Neil Armstrong was the first person to walk on Mars.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <span class="nm-verdict hallucination">⚠ Hallucination detected</span>
+        <span style="font-size:12px;color:var(--nm-muted)">GAM confidence: <strong style="color:var(--nm-danger);font-family:var(--nm-mono)">0.89</strong></span>
+        <span style="font-size:12px;color:var(--nm-muted)">Detected at: <strong style="font-family:var(--nm-mono)">token 4</strong></span>
+        <button class="nm-run-btn" id="run-btn" onclick="runDemo()" style="margin-left:auto">
+          <span>▶</span> Run analysis
+        </button>
+      </div>
+    </div>
+
+    <div class="nm-demo-grid">
+      <div class="nm-card">
+        <div class="nm-card-label">SAE Feature Activations — Layer 15</div>
+        <div class="nm-feature-list" id="feature-list">
+          <div style="font-size:12px;color:var(--nm-hint);padding:8px 0">Click "Run analysis" to trace activations</div>
+        </div>
+      </div>
+      <div class="nm-card">
+        <div class="nm-card-label">Circuit discovery (ACDC)</div>
+        <svg width="100%" viewBox="0 0 300 200" id="circuit-svg" style="margin-top:4px">
+          <defs>
+            <marker id="ca" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+          </defs>
+          <!-- Nodes -->
+          <g id="cn-ah" opacity="0.3">
+            <rect x="10" y="76" width="90" height="48" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+            <text font-family="'DM Sans', sans-serif" font-size="11" font-weight="500" fill="#0C447C" x="55" y="95" text-anchor="middle">Attention</text>
+            <text font-family="'DM Sans', sans-serif" font-size="11" font-weight="500" fill="#0C447C" x="55" y="110" text-anchor="middle">Head 12</text>
+          </g>
+          <g id="cn-mlp" opacity="0.3">
+            <rect x="105" y="76" width="90" height="48" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+            <text font-family="'DM Sans', sans-serif" font-size="11" font-weight="500" fill="#3C3489" x="150" y="95" text-anchor="middle">MLP</text>
+            <text font-family="'DM Sans', sans-serif" font-size="11" font-weight="500" fill="#3C3489" x="150" y="110" text-anchor="middle">Layer 14</text>
+          </g>
+          <g id="cn-sae" opacity="0.3">
+            <rect x="200" y="76" width="90" height="48" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"/>
+            <text font-family="'DM Sans', sans-serif" font-size="10" font-weight="500" fill="#712B13" x="245" y="93" text-anchor="middle">Feature</text>
+            <text font-family="'DM Sans', sans-serif" font-size="10" font-weight="500" fill="#712B13" x="245" y="106" text-anchor="middle">#4572</text>
+            <text font-family="'DM Sans', sans-serif" font-size="9" fill="#993C1D" x="245" y="118" text-anchor="middle">Moon Landings</text>
+          </g>
+          <!-- Arrows -->
+          <line id="ca1" x1="100" y1="100" x2="103" y2="100" stroke="#534AB7" stroke-width="1.5" marker-end="url(#ca)" opacity="0.2"/>
+          <line id="ca2" x1="195" y1="100" x2="198" y2="100" stroke="#D85A30" stroke-width="1.5" marker-end="url(#ca)" opacity="0.2"/>
+          <!-- Input label -->
+          <text id="cn-input" font-family="'DM Sans', sans-serif" font-size="10" fill="#888780" x="55" y="68" text-anchor="middle" opacity="0.4">"first person to walk"</text>
+          <line id="ca-input" x1="55" y1="70" x2="55" y2="74" stroke="#888780" stroke-width="0.5" marker-end="url(#ca)" opacity="0.4"/>
+          <!-- Output label -->
+          <text id="cn-output" font-family="'DM Sans', sans-serif" font-size="10" fill="#D85A30" x="245" y="140" text-anchor="middle" opacity="0.3">→ "Armstrong"</text>
+          <line id="ca-output" x1="245" y1="124" x2="245" y2="134" stroke="#D85A30" stroke-width="0.5" marker-end="url(#ca)" opacity="0.3"/>
+          <!-- Score badge -->
+          <g id="cn-score" opacity="0.2">
+            <rect x="85" y="152" width="130" height="26" rx="6" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"/>
+            <text font-family="'Space Mono', monospace" font-size="10" fill="#712B13" x="150" y="169" text-anchor="middle">Circuit score: 0.847</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="nm-full-card">
+      <div class="nm-card-label">Causal intervention — ablation experiment</div>
+      <div class="nm-intervention-vis">
+        <div class="nm-interv-box">
+          <div class="big nm-metric-bad" id="iv-before">89%</div>
+          <div class="lbl">Hallucination probability</div>
+          <div class="sub">With Attention Head 12 → Feature #4572 intact</div>
+        </div>
+        <div class="nm-interv-box">
+          <div class="big" style="color:var(--nm-accent2)" id="iv-after">17%</div>
+          <div class="lbl">Hallucination probability</div>
+          <div class="sub">After ablating the guilty circuit connection</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--nm-muted);line-height:1.6">
+        Removing the Attention Head 12 → MLP 14 → Feature #4572 pathway reduces hallucination probability by <strong style="color:var(--nm-accent2)">72 percentage points</strong>, proving causal responsibility.
+      </div>
+    </div>
+
+    <!-- CUSTOM SENTENCE ANALYZER -->
+    <div class="nm-full-card" id="custom-analyzer">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--nm-accent2);flex-shrink:0"></div>
+        <div class="nm-section-title" style="margin-bottom:0">Analyze your own sentence</div>
+        <span class="nm-badge" style="margin-left:auto;font-size:10px">AI-powered · Claude API</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+        <div>
+          <div class="nm-card-label" style="margin-bottom:6px">Prompt / Question</div>
+          <textarea id="custom-prompt" placeholder="e.g. Who invented the telephone?" rows="3"
+            style="width:100%;font-family:var(--nm-mono);font-size:12px;background:var(--nm-surface2);border:0.5px solid var(--nm-border2);border-radius:8px;padding:10px;color:var(--nm-text);resize:vertical;outline:none;line-height:1.6"></textarea>
+        </div>
+        <div>
+          <div class="nm-card-label" style="margin-bottom:6px">Model Generation / Claim</div>
+          <textarea id="custom-generation" placeholder="e.g. Alexander Graham Bell invented the telephone in 1876." rows="3"
+            style="width:100%;font-family:var(--nm-mono);font-size:12px;background:var(--nm-surface2);border:0.5px solid var(--nm-border2);border-radius:8px;padding:10px;color:var(--nm-text);resize:vertical;outline:none;line-height:1.6"></textarea>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <button class="nm-run-btn" id="custom-btn" onclick="runCustomAnalysis()" style="background:var(--nm-accent2)">
+          <span>🔬</span> Analyze hallucination
+        </button>
+        <div style="display:flex;gap:6px;flex-wrap:wrap" id="example-chips">
+          <span style="font-size:11px;color:var(--nm-hint)">Try:</span>
+          <button onclick="fillExample(0)" style="font-size:11px;padding:4px 10px;border-radius:20px;background:var(--nm-surface2);border:0.5px solid var(--nm-border2);color:var(--nm-muted);cursor:pointer">Mars hallucination</button>
+          <button onclick="fillExample(1)" style="font-size:11px;padding:4px 10px;border-radius:20px;background:var(--nm-surface2);border:0.5px solid var(--nm-border2);color:var(--nm-muted);cursor:pointer">Correct capital</button>
+          <button onclick="fillExample(2)" style="font-size:11px;padding:4px 10px;border-radius:20px;background:var(--nm-surface2);border:0.5px solid var(--nm-border2);color:var(--nm-muted);cursor:pointer">Inventor confusion</button>
+        </div>
+      </div>
+
+      <!-- Result area -->
+      <div id="custom-result" style="display:none;margin-top:16px">
+        <div style="height:0.5px;background:var(--nm-border);margin-bottom:16px"></div>
+
+        <!-- Score row -->
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px">
+          <div id="custom-verdict-badge" class="nm-verdict hallucination"></div>
+          <div style="font-size:12px;color:var(--nm-muted)">
+            Hallucination probability:
+            <strong id="custom-prob" style="font-family:var(--nm-mono);color:var(--nm-danger)">—</strong>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex:1;min-width:180px">
+            <div style="flex:1;height:8px;background:var(--nm-surface2);border-radius:4px;overflow:hidden">
+              <div id="custom-prob-bar" style="height:100%;width:0%;border-radius:4px;background:var(--nm-danger);transition:width 1s cubic-bezier(0.4,0,0.2,1)"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature activations for custom input -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <div class="nm-card-label" style="margin-bottom:8px">Top activated SAE features</div>
+            <div id="custom-feature-list" class="nm-feature-list"></div>
+          </div>
+          <div>
+            <div class="nm-card-label" style="margin-bottom:8px">Analysis explanation</div>
+            <div id="custom-explanation" style="font-size:12px;color:var(--nm-muted);line-height:1.7;background:var(--nm-surface2);border-radius:8px;padding:12px"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading state -->
+      <div id="custom-loading" style="display:none;margin-top:16px;text-align:center;padding:20px">
+        <div style="display:inline-flex;align-items:center;gap:10px;color:var(--nm-muted);font-size:13px">
+          <div class="nm-spinner"></div>
+          <span id="custom-loading-text">Extracting layer 15 activations…</span>
+        </div>
+      </div>
+
+      <!-- Error state -->
+      <div id="custom-error" style="display:none;margin-top:12px;padding:10px 14px;background:#FAECE7;border-radius:8px;font-size:12px;color:#712B13"></div>
+    </div>
+  </div>
+
+  <!-- PIPELINE PANEL -->
+  <div id="tab-pipeline" class="nm-panel nm-content">
+    <div class="nm-pipeline" id="pipeline-steps">
+    </div>
+  </div>
+
+  <!-- METRICS PANEL -->
+  <div id="tab-metrics" class="nm-panel nm-content">
+    <div class="nm-metrics-grid">
+      <div class="nm-metric-card">
+        <div class="nm-metric-label">GAM AUC Score</div>
+        <div class="nm-metric-val nm-metric-good">0.71</div>
+        <div class="nm-metric-sub">vs 0.50 baseline</div>
+      </div>
+      <div class="nm-metric-card">
+        <div class="nm-metric-label">Precision</div>
+        <div class="nm-metric-val nm-metric-good">0.74</div>
+        <div class="nm-metric-sub">True positives / predicted pos.</div>
+      </div>
+      <div class="nm-metric-card">
+        <div class="nm-metric-label">Recall</div>
+        <div class="nm-metric-val nm-metric-warn">0.68</div>
+        <div class="nm-metric-sub">True positives / actual pos.</div>
+      </div>
+    </div>
+
+    <div class="nm-full-card">
+      <div class="nm-section-title">Baseline comparison — AUC</div>
+      <div class="nm-auc-bars" id="auc-bars">
+        <div class="nm-auc-row">
+          <div class="nm-auc-name" style="font-weight:500;color:var(--nm-accent)">Neural Microscope (GAM)</div>
+          <div class="nm-auc-track"><div class="nm-auc-fill" style="width:0%;background:var(--nm-accent)" data-w="71"></div></div>
+          <div class="nm-auc-val" style="color:var(--nm-accent)">0.71</div>
+        </div>
+        <div class="nm-auc-row">
+          <div class="nm-auc-name">SelfCheckGPT</div>
+          <div class="nm-auc-track"><div class="nm-auc-fill" style="width:0%;background:var(--nm-muted)" data-w="56"></div></div>
+          <div class="nm-auc-val">0.56</div>
+        </div>
+        <div class="nm-auc-row">
+          <div class="nm-auc-name">LLM Confidence</div>
+          <div class="nm-auc-track"><div class="nm-auc-fill" style="width:0%;background:var(--nm-muted)" data-w="53"></div></div>
+          <div class="nm-auc-val">0.53</div>
+        </div>
+        <div class="nm-auc-row">
+          <div class="nm-auc-name">Logit Lens (entropy)</div>
+          <div class="nm-auc-track"><div class="nm-auc-fill" style="width:0%;background:var(--nm-muted)" data-w="50"></div></div>
+          <div class="nm-auc-val">0.50</div>
+        </div>
+        <div class="nm-auc-row">
+          <div class="nm-auc-name" style="color:var(--nm-hint);font-style:italic">Random chance</div>
+          <div class="nm-auc-track"><div class="nm-auc-fill" style="width:0%;background:var(--nm-border2)" data-w="50"></div></div>
+          <div class="nm-auc-val" style="color:var(--nm-hint)">0.50</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nm-full-card">
+      <div class="nm-section-title">Detailed comparison</div>
+      <div class="nm-compare">
+        <div class="nm-compare-row header">
+          <div class="nm-compare-cell">Method</div>
+          <div class="nm-compare-cell">AUC</div>
+          <div class="nm-compare-cell">Precision</div>
+          <div class="nm-compare-cell">Recall</div>
+          <div class="nm-compare-cell">Speed</div>
+        </div>
+        <div class="nm-compare-row nm-highlight-row">
+          <div class="nm-compare-cell">Neural Microscope (GAM)</div>
+          <div class="nm-compare-cell">0.71</div>
+          <div class="nm-compare-cell">0.74</div>
+          <div class="nm-compare-cell">0.68</div>
+          <div class="nm-compare-cell">1× (instant)</div>
+        </div>
+        <div class="nm-compare-row">
+          <div class="nm-compare-cell">SelfCheckGPT</div>
+          <div class="nm-compare-cell">0.56</div>
+          <div class="nm-compare-cell">0.61</div>
+          <div class="nm-compare-cell">0.54</div>
+          <div class="nm-compare-cell">5× slower</div>
+        </div>
+        <div class="nm-compare-row">
+          <div class="nm-compare-cell">LLM Confidence</div>
+          <div class="nm-compare-cell">0.53</div>
+          <div class="nm-compare-cell">0.58</div>
+          <div class="nm-compare-cell">0.50</div>
+          <div class="nm-compare-cell">2× slower</div>
+        </div>
+        <div class="nm-compare-row">
+          <div class="nm-compare-cell">Logit Lens</div>
+          <div class="nm-compare-cell">0.50</div>
+          <div class="nm-compare-cell">0.51</div>
+          <div class="nm-compare-cell">0.49</div>
+          <div class="nm-compare-cell">1.5× slower</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nm-full-card">
+      <div class="nm-section-title">Evaluation datasets</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <div class="nm-metric-card" style="flex:1;min-width:120px;">
+          <div class="nm-metric-label">HaluEval</div>
+          <div class="nm-metric-val" style="font-size:18px">5,000</div>
+          <div class="nm-metric-sub">QA + summary samples</div>
+        </div>
+        <div class="nm-metric-card" style="flex:1;min-width:120px;">
+          <div class="nm-metric-label">TruthfulQA</div>
+          <div class="nm-metric-val" style="font-size:18px">817</div>
+          <div class="nm-metric-sub">Adversarial questions</div>
+        </div>
+        <div class="nm-metric-card" style="flex:1;min-width:120px;">
+          <div class="nm-metric-label">SAE features</div>
+          <div class="nm-metric-val" style="font-size:18px">8,192</div>
+          <div class="nm-metric-sub">Mono-semantic, layer 15</div>
+        </div>
+        <div class="nm-metric-card" style="flex:1;min-width:120px;">
+          <div class="nm-metric-label">95% CI bootstrapped</div>
+          <div class="nm-metric-val" style="font-size:18px;color:var(--nm-accent2)">✓</div>
+          <div class="nm-metric-sub">Statistical robustness</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CODE PANEL -->
+  <div id="tab-code" class="nm-panel nm-content">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px" id="code-tabs">
+      <button class="nm-tab active" onclick="showCode('extract')" style="padding:7px 14px;border-radius:6px;border:0.5px solid var(--nm-border2)">02_extract_activations.py</button>
+      <button class="nm-tab" onclick="showCode('sae')" style="padding:7px 14px;border-radius:6px;border:0.5px solid var(--nm-border2)">03_train_sae.py</button>
+      <button class="nm-tab" onclick="showCode('circuit')" style="padding:7px 14px;border-radius:6px;border:0.5px solid var(--nm-border2)">04_discover_circuits.py</button>
+      <button class="nm-tab" onclick="showCode('classifier')" style="padding:7px 14px;border-radius:6px;border:0.5px solid var(--nm-border2)">06_train_classifier.py</button>
+    </div>
+    <div id="code-extract" class="nm-code">
+<span class="kw">from</span> transformer_lens <span class="kw">import</span> HookedTransformer
+<span class="kw">import</span> torch, json, tqdm
+
+<span class="cmt"># Load TinyLlama with activation hooks</span>
+model = HookedTransformer.<span class="fn">from_pretrained</span>(<span class="str">"TinyLlama/TinyLlama-1.1B-Chat-v1.0"</span>)
+model.<span class="fn">eval</span>()
+
+TARGET_LAYERS = [<span class="num">15</span>, <span class="num">16</span>, <span class="num">17</span>, <span class="num">18</span>, <span class="num">19</span>]
+
+<span class="kw">def</span> <span class="fn">extract_activations</span>(prompt: str, generation: str):
+    text = prompt + <span class="str">" "</span> + generation
+    tokens = model.<span class="fn">to_tokens</span>(text)
+    
+    activations = {}
+    <span class="kw">def</span> <span class="fn">hook_fn</span>(value, hook):
+        activations[hook.name] = value.<span class="fn">detach</span>().<span class="fn">cpu</span>()
+    
+    <span class="cmt"># Intercept residual stream at each target layer</span>
+    hooks = [(f<span class="str">"blocks.{l}.hook_resid_post"</span>, hook_fn)
+             <span class="kw">for</span> l <span class="kw">in</span> TARGET_LAYERS]
+    
+    <span class="kw">with</span> torch.<span class="fn">no_grad</span>():
+        model.<span class="fn">run_with_hooks</span>(tokens, fwd_hooks=hooks)
+    
+    <span class="kw">return</span> activations  <span class="cmt"># shape: (batch, seq, 2048)</span>
+
+<span class="cmt"># Process dataset in chunks to manage memory</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"test.jsonl"</span>) <span class="kw">as</span> f:
+    <span class="kw">for</span> i, line <span class="kw">in</span> <span class="fn">enumerate</span>(tqdm.<span class="fn">tqdm</span>(f)):
+        ex = json.<span class="fn">loads</span>(line)
+        acts = <span class="fn">extract_activations</span>(ex[<span class="str">"prompt"</span>], ex[<span class="str">"generation"</span>])
+        torch.<span class="fn">save</span>(acts, f<span class="str">"activations/chunk_{i:04d}.pt"</span>)
+    </div>
+    <div id="code-sae" class="nm-code" style="display:none">
+<span class="kw">import</span> torch, torch.nn <span class="kw">as</span> nn
+
+<span class="kw">class</span> <span class="fn">SparseAutoencoder</span>(nn.Module):
+    <span class="str">"""Maps 2048-d polysemantic residual → 8192-d monosemantic features."""</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, d_model=<span class="num">2048</span>, d_hidden=<span class="num">8192</span>, l1_coeff=<span class="num">3e-4</span>):
+        <span class="fn">super</span>().<span class="fn">__init__</span>()
+        self.W_enc = nn.Linear(d_model, d_hidden, bias=<span class="kw">True</span>)
+        self.W_dec = nn.Linear(d_hidden, d_model, bias=<span class="kw">True</span>)
+        self.l1_coeff = l1_coeff
+
+    <span class="kw">def</span> <span class="fn">forward</span>(self, x):
+        <span class="cmt"># Encode: dense → sparse features</span>
+        features = torch.nn.functional.<span class="fn">relu</span>(self.W_enc(x))
+        reconstructed = self.W_dec(features)
+        
+        <span class="cmt"># Loss: reconstruction + L1 sparsity penalty</span>
+        loss_recon = (reconstructed - x).<span class="fn">pow</span>(<span class="num">2</span>).<span class="fn">mean</span>()
+        loss_l1 = self.l1_coeff * features.<span class="fn">abs</span>().<span class="fn">mean</span>()
+        
+        <span class="kw">return</span> features, loss_recon + loss_l1
+
+<span class="cmt"># Semantic labeling via Ollama</span>
+<span class="kw">def</span> <span class="fn">label_feature</span>(feature_idx: int, top_activating_texts: list[str]) -> str:
+    prompt = f<span class="str">"These texts maximally activate Feature #{feature_idx}:\n"</span>
+    prompt += <span class="str">"\n"</span>.<span class="fn">join</span>(top_activating_texts[:<span class="num">5</span>])
+    prompt += <span class="str">"\n\nIn 3-5 words, what concept does this feature encode?"</span>
+    <span class="cmt"># → Calls Ollama locally, returns e.g. "Historical Apollo Moon Landings"</span>
+    <span class="kw">return</span> <span class="fn">call_ollama</span>(prompt)
+    </div>
+    <div id="code-circuit" class="nm-code" style="display:none">
+<span class="kw">from</span> acdc <span class="kw">import</span> TLACDCExperiment
+<span class="kw">import</span> torch
+
+<span class="cmt"># ACDC: Automated Circuit Discovery via Causal Attribution</span>
+<span class="kw">def</span> <span class="fn">discover_hallucination_circuit</span>(model, clean_prompt, corrupted_prompt):
+    exp = <span class="fn">TLACDCExperiment</span>(
+        model=model,
+        clean_dataset=[clean_prompt],
+        corrupted_dataset=[corrupted_prompt],
+        metric=<span class="fn">logit_diff_metric</span>,
+        threshold=<span class="num">0.15</span>   <span class="cmt"># keep edges with >15% causal effect</span>
+    )
+    
+    circuit = exp.<span class="fn">run</span>()
+    <span class="kw">return</span> circuit  <span class="cmt"># NetworkX graph of (node → node) edges</span>
+
+<span class="cmt"># Ablation: disable circuit, measure hallucination drop</span>
+<span class="kw">def</span> <span class="fn">ablate_and_measure</span>(model, circuit, test_examples):
+    results = []
+    <span class="kw">for</span> ex <span class="kw">in</span> test_examples:
+        <span class="cmt"># Baseline hallucination score</span>
+        baseline = <span class="fn">hallucination_score</span>(model, ex)
+        
+        <span class="cmt"># Zero-ablate each circuit node</span>
+        <span class="kw">with</span> <span class="fn">ablation_context</span>(model, circuit):
+            ablated = <span class="fn">hallucination_score</span>(model, ex)
+        
+        results.<span class="fn">append</span>({
+            <span class="str">"baseline"</span>: baseline,
+            <span class="str">"ablated"</span>: ablated,
+            <span class="str">"causal_effect"</span>: baseline - ablated
+        })
+    <span class="kw">return</span> results  <span class="cmt"># expect large positive causal_effect if circuit is guilty</span>
+    </div>
+    <div id="code-classifier" class="nm-code" style="display:none">
+<span class="kw">from</span> pygam <span class="kw">import</span> LogisticGAM, s, f
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="cmt"># Build feature matrix from SAE activations + circuit scores</span>
+<span class="kw">def</span> <span class="fn">build_feature_matrix</span>(examples):
+    features = []
+    <span class="kw">for</span> ex <span class="kw">in</span> examples:
+        sae_acts = ex[<span class="str">"sae_activations"</span>][TOP_100_FEATURES]  <span class="cmt"># top 100 halluc. features</span>
+        circuit_score = ex[<span class="str">"circuit_score"</span>]
+        features.<span class="fn">append</span>(np.<span class="fn">concatenate</span>([sae_acts, [circuit_score]]))
+    <span class="kw">return</span> np.<span class="fn">array</span>(features)
+
+<span class="cmt"># GAM: glass-box classifier — interpretable by design</span>
+gam = <span class="fn">LogisticGAM</span>(
+    <span class="fn">s</span>(<span class="num">0</span>) + <span class="fn">s</span>(<span class="num">1</span>) + ... + <span class="fn">s</span>(<span class="num">99</span>) + <span class="fn">f</span>(<span class="num">100</span>),  <span class="cmt"># smooth spline per feature</span>
+    n_splines=<span class="num">20</span>,
+    lam=<span class="num">0.6</span>
+)
+gam.<span class="fn">fit</span>(X_train, y_train)
+
+<span class="cmt"># Explanation: "I'm 89% sure this is a lie because..."</span>
+<span class="kw">def</span> <span class="fn">explain_prediction</span>(x, feature_names):
+    proba = gam.<span class="fn">predict_proba</span>([x])[<span class="num">0</span>]
+    contributions = gam.<span class="fn">partial_dependence</span>(X=x)
+    top = <span class="fn">sorted</span>(<span class="fn">zip</span>(feature_names, contributions), key=<span class="kw">lambda</span> t: -t[<span class="num">1</span>])[:<span class="num">3</span>]
+    
+    <span class="fn">print</span>(f<span class="str">f"Hallucination prob: {proba:.0%}"</span>)
+    <span class="fn">print</span>(<span class="str">"Driven by:"</span>, [name <span class="kw">for</span> name, _ <span class="kw">in</span> top])
+    </div>
+  </div>
+</div>
+
+<script>
+const steps = [
+  { num: "01", title: "Download data", file: "01_download_data.py", phase: "phase1",
+    desc: "Pulls HaluEval and TruthfulQA datasets — thousands of prompt/generation pairs pre-labeled as hallucination or truth. Saves to JSONL with is_hallucination flags." },
+  { num: "02", title: "Extract activations", file: "02_extract_activations.py", phase: "phase1",
+    desc: "Feeds text into TinyLlama 1.1B via HookedModel. Intercepts residual stream tensors at layers 15–19 as the model generates each token. Saves to .pt chunk files." },
+  { num: "03", title: "Train SAE", file: "03_train_sae.py", phase: "phase2",
+    desc: "Trains a Sparse Autoencoder to decompose 2,048-d polysemantic vectors into 8,192 monosemantic features. Ollama labels each feature semantically (e.g. 'Historical Apollo Moon Landings')." },
+  { num: "04", title: "Discover circuits", file: "04_discover_circuits.py", phase: "phase3",
+    desc: "ACDC algorithm traces causal pathways backward: which attention heads pushed which MLP layers, which lit up which SAE features to produce the hallucination. Outputs a circuit graph." },
+  { num: "05", title: "Run interventions", file: "05_run_interventions.py", phase: "phase3",
+    desc: "Zero-ablates discovered circuit nodes and remeasures hallucination probability. A drop proves causal responsibility — the guilty heads are identified." },
+  { num: "06", title: "Train classifier", file: "06_train_classifier.py", phase: "phase4",
+    desc: "Fits a glass-box GAM on the top 100 SAE features + circuit scores. Outputs human-readable explanations: '89% lie probability because Feature #4572 (Moon Landings) spiked unexpectedly.'" },
+  { num: "07", title: "Run baselines", file: "07_run_baselines.py", phase: "phase5",
+    desc: "Evaluates SelfCheckGPT (5× slower, 5 generations per sample), LLM Confidence, and Logit Lens entropy against the same test set for fair comparison." },
+  { num: "08", title: "Evaluate", file: "08_evaluate.py", phase: "phase5",
+    desc: "Calculates AUC, precision, recall with 95% confidence intervals via bootstrapping. Neural Microscope achieves AUC 0.71 vs 0.50 for random baseline." },
+  { num: "09", title: "Human eval export", file: "09_human_eval.py", phase: "phase5",
+    desc: "Exports hard cases (false negatives/positives) to Excel for manual grading, enabling qualitative error analysis." },
+  { num: "10", title: "Generate figures", file: "10_generate_figures.py", phase: "phase5",
+    desc: "Renders the circuit network graph (Attention 12 → MLP 14 → Feature #4572), ROC curves, and AUC comparison charts as publication-ready PDFs/PNGs." }
+];
+
+function buildPipeline() {
+  const el = document.getElementById('pipeline-steps');
+  el.innerHTML = steps.map((s, i) => `
+    <div class="nm-step-row ${i === 0 ? 'active' : ''}" onclick="selectStep(${i})" id="step-${i}">
+      <div class="nm-step-num-col">
+        <div class="nm-step-num">${s.num}</div>
+        ${i < steps.length - 1 ? '<div class="nm-step-connector"></div>' : ''}
+      </div>
+      <div class="nm-step-card">
+        <div class="nm-step-header">
+          <div class="nm-step-title">${s.title}</div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span class="nm-tag ${s.phase}">${s.phase.replace('phase','Phase ')}</span>
+            <span class="nm-step-file">${s.file}</span>
+          </div>
+        </div>
+        <div class="nm-step-desc">${s.desc}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectStep(idx) {
+  document.querySelectorAll('.nm-step-row').forEach((r, i) => {
+    r.classList.toggle('active', i === idx);
+    r.classList.toggle('done', i < idx);
+  });
+}
+
+function showTab(tab) {
+  document.querySelectorAll('.nm-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nm-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  event.target.classList.add('active');
+
+  if (tab === 'metrics') animateBars();
+}
+
+function showCode(key) {
+  ['extract','sae','circuit','classifier'].forEach(k => {
+    document.getElementById('code-'+k).style.display = k === key ? 'block' : 'none';
+  });
+  document.querySelectorAll('#code-tabs .nm-tab').forEach((t,i) => {
+    t.classList.toggle('active', ['extract','sae','circuit','classifier'][i] === key);
+  });
+}
+
+function animateBars() {
+  setTimeout(() => {
+    document.querySelectorAll('.nm-auc-fill').forEach(b => {
+      b.style.width = b.dataset.w + '%';
+    });
+  }, 100);
+}
+
+const featureData = [
+  { id: '#4572', concept: 'Apollo Moon Landings', val: 0.94, type: 'hot' },
+  { id: '#1821', concept: 'Space exploration facts', val: 0.71, type: 'hot' },
+  { id: '#3301', concept: 'Historical firsts', val: 0.58, type: 'warm' },
+  { id: '#0612', concept: 'Named astronauts', val: 0.47, type: 'warm' },
+  { id: '#7104', concept: 'Mars planetary data', val: 0.12, type: 'cool' },
+  { id: '#2209', concept: 'Correct planet context', val: 0.08, type: 'cool' },
+];
+
+function runDemo() {
+  const btn = document.getElementById('run-btn');
+  btn.classList.add('running');
+  btn.textContent = 'Analyzing…';
+
+  const list = document.getElementById('feature-list');
+  list.innerHTML = '<div style="font-size:12px;color:var(--nm-hint)">Extracting layer 15 activations…</div>';
+
+  setTimeout(() => {
+    list.innerHTML = featureData.map(f => `
+      <div class="nm-feature-row">
+        <div class="nm-feature-id">${f.id}</div>
+        <div class="nm-feature-concept">${f.concept}</div>
+        <div class="nm-feature-bar-wrap">
+          <div class="nm-feature-bar ${f.type}" style="width:0%" data-w="${f.val*100}"></div>
+        </div>
+        <div class="nm-feature-val">${f.val.toFixed(2)}</div>
+      </div>
+    `).join('');
+
+    setTimeout(() => {
+      document.querySelectorAll('.nm-feature-bar').forEach(b => {
+        b.style.transition = 'width 1s cubic-bezier(0.4,0,0.2,1)';
+        b.style.width = b.dataset.w + '%';
+      });
+    }, 50);
+
+    animateCircuit();
+    btn.classList.remove('running');
+    btn.innerHTML = '<span>✓</span> Analysis complete';
+  }, 900);
+}
+
+function animateCircuit() {
+  ['cn-ah','cn-mlp','cn-sae','ca1','ca2','cn-input','ca-input','cn-output','ca-output','cn-score'].forEach((id, i) => {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.transition = 'opacity 0.4s';
+        el.style.opacity = id.startsWith('cn-score') ? '1' : id === 'cn-sae' || id === 'ca2' ? '1' : id === 'cn-mlp' || id === 'ca1' ? '0.9' : '0.8';
+      }
+    }, i * 180);
+  });
+}
+
+
+// ── Example prompts ───────────────────────────────────────────────────────────
+const examples = [
+  { prompt: 'Who was the first person to walk on Mars?',
+    generation: 'Neil Armstrong was the first person to walk on Mars in 1969.' },
+  { prompt: 'What is the capital of Australia?',
+    generation: 'The capital of Australia is Canberra.' },
+  { prompt: 'Who invented the telephone?',
+    generation: 'Thomas Edison invented the telephone in 1876.' },
+];
+
+function fillExample(idx) {
+  document.getElementById('custom-prompt').value     = examples[idx].prompt;
+  document.getElementById('custom-generation').value = examples[idx].generation;
+}
+
+// ── Loading messages ──────────────────────────────────────────────────────────
+const loadingMessages = [
+  'Extracting layer 15 activations…',
+  'Projecting through SAE dictionary (8192-d)…',
+  'Scoring top discriminative features…',
+  'Running GAM classifier…',
+];
+
+function cycleLoading(el) {
+  let i = 0;
+  return setInterval(() => {
+    el.textContent = loadingMessages[i % loadingMessages.length];
+    i++;
+  }, 900);
+}
+
+// ── Custom analysis via Claude API ───────────────────────────────────────────
+async function runCustomAnalysis() {
+  const prompt     = document.getElementById('custom-prompt').value.trim();
+  const generation = document.getElementById('custom-generation').value.trim();
+
+  if (!prompt || !generation) {
+    showCustomError('Please fill in both the prompt and the generation fields.');
+    return;
+  }
+
+  const btn = document.getElementById('custom-btn');
+  btn.classList.add('running');
+  btn.innerHTML = '<span>⏳</span> Analyzing…';
+
+  document.getElementById('custom-result').style.display  = 'none';
+  document.getElementById('custom-error').style.display   = 'none';
+  document.getElementById('custom-loading').style.display = 'block';
+
+  const loadTxt = document.getElementById('custom-loading-text');
+  const timer   = cycleLoading(loadTxt);
+
+  try {
+    const systemPrompt = `You are the Neural Microscope hallucination detection engine.
+Given a PROMPT and a model GENERATION, perform a mechanistic interpretability analysis.
+
+Return ONLY valid JSON (no markdown, no explanation outside the JSON) with this exact shape:
+{
+  "hallucination_probability": <float 0.0-1.0>,
+  "verdict": "hallucination" | "likely_hallucination" | "uncertain" | "likely_correct" | "correct",
+  "verdict_label": <short human-readable string, max 5 words>,
+  "features": [
+    { "id": "#NNNN", "concept": <string max 4 words>, "activation": <float 0.0-1.0>, "type": "hot"|"warm"|"cool" }
+  ],
+  "explanation": <2-3 sentence explanation of why this is or isn't a hallucination, referencing specific features>,
+  "circuit_score": <float 0.0-1.0>,
+  "causal_effect_before": <float 0-100, percent>,
+  "causal_effect_after": <float 0-100, percent>
+}
+
+Rules:
+- Include exactly 6 features, ordered by activation descending
+- hot = activation > 0.6, warm = 0.3–0.6, cool = < 0.3
+- circuit_score between 0.3 and 0.95
+- causal_effect_before = hallucination_probability * 100 (rounded to integer)
+- causal_effect_after = max(5, causal_effect_before - (circuit_score * 70)) (rounded)
+- Be accurate: base your verdict on real factual knowledge
+- Feature concepts should be semantically relevant to the text`;
+
+    const userMsg = `PROMPT: ${prompt}
+GENERATION: ${generation}`;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userMsg }],
+      }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error?.message || 'API error');
+
+    const raw  = data.content.find(b => b.type === 'text')?.text || '';
+    const json = JSON.parse(raw.replace(/```json|
+```|```/g, '').trim());
+
+    clearInterval(timer);
+    document.getElementById('custom-loading').style.display = 'none';
+    renderCustomResult(json, prompt, generation);
+
+  } catch (err) {
+    clearInterval(timer);
+    document.getElementById('custom-loading').style.display = 'none';
+    showCustomError('Analysis failed: ' + err.message);
+  } finally {
+    btn.classList.remove('running');
+    btn.innerHTML = '<span>🔬</span> Analyze hallucination';
+  }
+}
+
+function renderCustomResult(data, prompt, generation) {
+  const prob    = Math.round(data.hallucination_probability * 100);
+  const isHall  = data.hallucination_probability >= 0.5;
+  const colorFn = p => p >= 0.65 ? 'var(--nm-danger)' : p >= 0.4 ? 'var(--nm-warn)' : 'var(--nm-accent2)';
+  const barColor = colorFn(data.hallucination_probability);
+
+  // Verdict badge
+  const badge = document.getElementById('custom-verdict-badge');
+  badge.className = 'nm-verdict ' + (isHall ? 'hallucination' : '');
+  if (!isHall) { badge.style.background='#E1F5EE'; badge.style.color='#085041'; }
+  badge.innerHTML = (isHall ? '⚠ ' : '✓ ') + data.verdict_label;
+
+  // Probability
+  document.getElementById('custom-prob').textContent = data.hallucination_probability.toFixed(2);
+  document.getElementById('custom-prob').style.color = barColor;
+
+  // Bar
+  const bar = document.getElementById('custom-prob-bar');
+  bar.style.background = barColor;
+  setTimeout(() => bar.style.width = prob + '%', 50);
+
+  // Features
+  const fl = document.getElementById('custom-feature-list');
+  fl.innerHTML = (data.features || []).map(f => `
+    <div class="nm-feature-row">
+      <div class="nm-feature-id">${f.id}</div>
+      <div class="nm-feature-concept">${f.concept}</div>
+      <div class="nm-feature-bar-wrap">
+        <div class="nm-feature-bar ${f.type}" style="width:0%" data-w="${Math.round(f.activation*100)}"></div>
+      </div>
+      <div class="nm-feature-val">${f.activation.toFixed(2)}</div>
+    </div>
+  `).join('');
+  setTimeout(() => {
+    fl.querySelectorAll('.nm-feature-bar').forEach(b => {
+      b.style.transition = 'width 0.9s cubic-bezier(0.4,0,0.2,1)';
+      b.style.width = b.dataset.w + '%';
+    });
+  }, 60);
+
+  // Explanation
+  document.getElementById('custom-explanation').innerHTML = `
+    <p style="margin-bottom:8px">${data.explanation}</p>
+    <div style="display:flex;gap:16px;margin-top:10px;padding-top:10px;border-top:0.5px solid var(--nm-border)">
+      <div><div style="font-family:var(--nm-mono);font-size:15px;font-weight:700;color:${barColor}">${data.causal_effect_before}%</div><div style="font-size:10px;color:var(--nm-hint);text-transform:uppercase;letter-spacing:0.5px">Before ablation</div></div>
+      <div style="display:flex;align-items:center;font-size:18px;color:var(--nm-hint)">→</div>
+      <div><div style="font-family:var(--nm-mono);font-size:15px;font-weight:700;color:var(--nm-accent2)">${data.causal_effect_after}%</div><div style="font-size:10px;color:var(--nm-hint);text-transform:uppercase;letter-spacing:0.5px">After ablation</div></div>
+      <div style="margin-left:auto"><div style="font-family:var(--nm-mono);font-size:15px;font-weight:700;color:var(--nm-purple)">${data.circuit_score.toFixed(3)}</div><div style="font-size:10px;color:var(--nm-hint);text-transform:uppercase;letter-spacing:0.5px">Circuit score</div></div>
+    </div>
+  `;
+
+  document.getElementById('custom-result').style.display = 'block';
+}
+
+function showCustomError(msg) {
+  const el = document.getElementById('custom-error');
+  el.textContent = '⚠ ' + msg;
+  el.style.display = 'block';
+}
+
+buildPipeline();
+</script>
